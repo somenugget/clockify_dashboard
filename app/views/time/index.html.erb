@@ -1,0 +1,18 @@
+
+<div class="columns">
+  <% @months_links.each do |link| %>
+    <div class="column">
+      <%= link_to link['label'], link['path'], class: class_names('has-text-weight-bold' => link['active'])  %>
+    </div>
+  <% end %>
+</div>
+
+<h5 class="title is-size-5 mb-6"><%= @user['name'] %></h5>
+
+<% @workspaces.each do |workspace| %>
+  <h2 class="title is-size-2"><%= workspace['name'] %></h2>
+
+  <h4 class="title is-size-4">
+    <%= workspace['sum'].in_hours.round(2) %> hours
+  </h4>
+<% end %>

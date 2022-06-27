@@ -9,20 +9,25 @@ class TimeController < ApplicationController
     @workspaces = workspaces_response.parsed_response.map do |ws|
       time_entries = HTTParty.get(
         "#{api_base}/workspaces/#{ws['id']}/user/#{@user['id']}/time-entries",
-        query: { start: start_date.strftime("%FT%T.000Z"), end: end_date.strftime("%FT%T.000Z") },
+        query: { start: start_date.strftime("%FT%T.000Z"), end: end_date.strftime("%FT%T.000Z"), 'page-size' => 5000 },
         headers: { 'X-Api-Key' => ENV['CLOCKIFY_API_KEY'] }
       )
+
 
       {
         'id' => ws['id'],
         'name' => ws['name'],
         'sum' => time_entries.
           parsed_response.
+          select { |te| te['timeInterval']['duration'].present? }.
           map { |te| ActiveSupport::Duration.parse te['timeInterval']['duration'] }.
           sum
       }
     end
 
+    @total_hours = @workspaces.map { |ws| ws['sum'] }.sum
+    @expected_hours = ExpectedHours.per_month(month: start_date.month, year: start_date.year)
+    @enough_hours = @total_hours.in_hours > @expected_hours - ExpectedHours::ALLOWED_UNDERWORK_HOURS
     @months_links = months_links
   end
 

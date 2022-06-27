@@ -1,4 +1,3 @@
-
 <div class="columns">
   <% @months_links.each do |link| %>
     <div class="column">
@@ -16,3 +15,7 @@
     <%= workspace['sum'].in_hours.round(2) %> hours
   </h4>
 <% end %>
+
+<h3 class="<%= class_names('title is-size-5', 'has-text-danger-dark' => !@enough_hours) %> ">
+  Expected hours: <%= @expected_hours %>
+</h3>

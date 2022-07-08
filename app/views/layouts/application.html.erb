@@ -11,7 +11,21 @@
   </head>
 
   <body>
-    <section class="container py-3">
+    <section class="container is-fluid py-3">
+
+      <% if current_user %>
+        <h5 class="title is-size-5 mb-6"><%= current_user['name'] %></h5>
+      <% end %>
+
+      <% if flash.any? %>
+        <% flash.each do |type, msg| %>
+          <div class="<%= class_names('notification is-light mb-2', 'is-danger': type === 'danger', 'is-warning': type === 'notice') %>">
+            <button class="delete"></button>
+            <%= msg %>
+          </div>
+        <% end %>
+      <% end %>
+
       <%= yield %>
     </section>
   </body>

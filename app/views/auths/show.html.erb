@@ -1,0 +1,16 @@
+<%= form_with url: auth_path, data: {turbo: false} do |f| %>
+  <div class="field">
+    <label class="label ">
+      API Key
+      <a href="https://clockify.me/user/settings" target="_blank" class="is-size-7">You can get in here</a>
+    </label>
+    <p class="control">
+  <%= f.text_field :api_key, class: 'input' %>
+    </p>
+  </div>
+  <div class="field">
+    <p class="control">
+  <%= f.submit 'Submit', class: 'button is-primary' %>
+    </p>
+  </div>
+<% end %>

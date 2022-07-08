@@ -1,16 +1,15 @@
-class TimeController < ApplicationController
+class TimesController < ApplicationController
+  before_action :authenticate_user
+
   def index
     api_base = 'https://api.clockify.me/api/v1'
-    user_response = HTTParty.get("#{api_base}/user", headers: { 'X-Api-Key' => ENV['CLOCKIFY_API_KEY'] })
-    @user = user_response.parsed_response
-
-    workspaces_response = HTTParty.get("#{api_base}/workspaces", headers: { 'X-Api-Key' => ENV['CLOCKIFY_API_KEY'] })
+    workspaces_response = HTTParty.get("#{api_base}/workspaces", headers: { 'X-Api-Key' => api_key })
 
     @workspaces = workspaces_response.parsed_response.map do |ws|
       time_entries = HTTParty.get(
-        "#{api_base}/workspaces/#{ws['id']}/user/#{@user['id']}/time-entries",
+        "#{api_base}/workspaces/#{ws['id']}/user/#{current_user['id']}/time-entries",
         query: { start: start_date.strftime("%FT%T.000Z"), end: end_date.strftime("%FT%T.000Z"), 'page-size' => 5000 },
-        headers: { 'X-Api-Key' => ENV['CLOCKIFY_API_KEY'] }
+        headers: { 'X-Api-Key' => api_key }
       )
 
 

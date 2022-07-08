@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  root "times#index"
 
-  root "time#index"
+  resource :auth, only: [:show, :create]
+  resources :times, only: [:index]
 end
